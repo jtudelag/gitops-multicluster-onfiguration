@@ -13,7 +13,7 @@ operators:
   config:
     env:
     - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
-      value: "false"
+      value: "true"
 
 operatorGroups:
 - name: openshift-gitops-operator
