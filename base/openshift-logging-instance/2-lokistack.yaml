@@ -18,4 +18,86 @@ spec:
   storageClassName: ocs-external-storagecluster-ceph-rbd
   tenants:
     mode: openshift-logging
+  # https://access.redhat.com/solutions/7001786
+  # template:
+  #   compactor:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #   distributor:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #   gateway:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #   indexGateway:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #   ingester:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #   querier:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #   queryFrontend:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #   ruler:
+  #     nodeSelector:
+  #       node-role.kubernetes.io/infra: ""
+  #     tolerations:
+  #     - effect: NoSchedule
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
+  #     - effect: NoExecute
+  #       key: node-role.kubernetes.io/infra
+  #       value: reserved
 ...
