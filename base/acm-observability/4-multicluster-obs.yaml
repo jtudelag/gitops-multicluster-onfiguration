@@ -1,0 +1,22 @@
+#https://github.com/stolostron/multicluster-observability-operator/blob/release-2.8/docs/MultiClusterObservability-CRD.md
+---
+apiVersion: observability.open-cluster-management.io/v1beta2
+kind: MultiClusterObservability
+metadata:
+  name: observability
+spec:
+  observabilityAddonSpec: {}
+  storageConfig:
+    metricObjectStorage:
+      name: thanos-object-storage
+      key: thanos.yaml
+  #nodeSelector:
+  #  node-role.kubernetes.io/infra: ""
+  #tolerations:
+  # - effect: NoSchedule
+  #   key: node-role.kubernetes.io/infra
+  #   operator: Exists
+  # - effect: NoExecute
+  #   key: node-role.kubernetes.io/infra
+  #   operator: Exists
+...
