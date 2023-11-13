@@ -1,0 +1,10 @@
+---
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: logging-loki-s3
+  namespace: openshift-logging
+spec:
+  storageClassName: openshift-storage.noobaa.io
+  generateBucketName: logging-loki-s3
+...
