@@ -4,7 +4,7 @@ kind: ArgoCD
 metadata:
   finalizers:
     - argoproj.io/finalizer
-  name: argocd
+  name: argocd-avp
   namespace: argocd-avp-gitops
 spec:
   server:
@@ -17,9 +17,18 @@ spec:
     policy: |
       g, system:cluster-admins, role:admin
     scopes: '[groups]'
+  sso:
+    dex:
+      openShiftOAuth: true
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 128Mi
+    provider: dex
   repo:
-    # Required to talk to vault
-    serviceaccount: vplugin
     mountsatoken: true
     volumes:
       - configMap:
