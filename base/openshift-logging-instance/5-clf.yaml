@@ -8,6 +8,8 @@ spec:
  pipelines:
  - inputRefs:
    - audit
+   - infrastructure
+   - application
    outputRefs:
    - default
 ...

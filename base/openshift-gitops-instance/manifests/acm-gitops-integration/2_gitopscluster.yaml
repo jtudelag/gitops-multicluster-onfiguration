@@ -1,0 +1,15 @@
+---
+apiVersion: apps.open-cluster-management.io/v1beta1
+kind: GitOpsCluster
+metadata:
+  name: gitops-hub-cluster
+  namespace: infra-gitops
+spec:
+  argoServer:
+    argoNamespace: infra-gitops
+  placementRef:
+    name: default-placement
+    kind: Placement
+    apiVersion: cluster.open-cluster-management.io/v1beta1
+...
+
