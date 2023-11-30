@@ -24,24 +24,22 @@ data:
           - generate
           - "."
       lockRepo: false
-  # avp-helm.yaml: |
-  #   apiVersion: argoproj.io/v1alpha1
-  #   kind: ConfigManagementPlugin
-  #   metadata:
-  #     name: argocd-vault-plugin-helm
-  #   spec:
-  #     allowConcurrency: true
-  #     discover:
-  #       find:
-  #         command:
-  #           - sh
-  #           - "-c"
-  #           - "find . -name 'Chart.yaml' && find . -name 'values.yaml'"
-  #     generate:
-  #       command:
-  #         - sh
-  #         - "-c"
-  #         - |
-  #           helm template $ARGOCD_APP_NAME --include-crds . |
-  #           argocd-vault-plugin generate -
-  #     lockRepo: false
+  avp-kustomize.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: argocd-vault-plugin
+    spec:
+      allowConcurrency: true
+      discover:
+        find:
+          command:
+            - sh
+            - "-c"
+            - "test -f kustomization.yaml"
+      generate:
+        command:
+         - sh
+        - "-c"
+        - "kustomize build --enable-helm . | argocd-vault-plugin generate -"
+      lockRepo: false
