@@ -47,7 +47,7 @@ data:
     apiVersion: argoproj.io/v1alpha1
     kind: ConfigManagementPlugin
     metadata:
-      name: avp-hlem-secrets
+      name: avp-helm-secrets
     spec:
       allowConcurrency: true
       discover:
