@@ -4,7 +4,7 @@ installPlanApproverAndVerifyJobsImage: registry.redhat.io/openshift4/ose-cli:v4.
 
 operators:
 - channel: gitops-1.10
-  installPlanApproval: Manual
+  installPlanApproval: Automatic
   name: openshift-gitops-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
