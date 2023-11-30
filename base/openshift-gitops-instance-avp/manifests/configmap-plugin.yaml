@@ -17,7 +17,7 @@ data:
           command:
             - sh
             - "-c"
-            - "find . -name '*.yaml' | xargs -I {} grep \"<path\\|avp\\.kubernetes\\.io\" {} | grep ."
+            "! test -f kustomization.yaml && ! test -f Chart.yaml"
       generate:
         command:
           - argocd-vault-plugin
@@ -36,12 +36,33 @@ data:
           command:
             - sh
             - "-c"
-            - "find . -name 'Chart.yaml' && find . -name 'values.yaml'"
+            - "! test -f kustomization.yaml && test -f Chart.yaml"
       generate:
         command:
           - sh
           - "-c"
           - |
             helm template $ARGOCD_APP_NAME --include-crds . |
+            argocd-vault-plugin generate -
+      lockRepo: false
+  avp-kustomization.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: argocd-vault-plugin-helm
+    spec:
+      allowConcurrency: true
+      discover:
+        find:
+          command:
+            - sh
+            - "-c"
+            - "test -f kustomization.yaml"
+      generate:
+        command:
+          - sh
+          - "-c"
+          - |
+            kustomize build --enable-helm . |
             argocd-vault-plugin generate -
       lockRepo: false
