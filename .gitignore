@@ -1,1 +1,2 @@
 .history/
+base/openshift-gitops-instance-avp/manifests/avp-delinea-backend-secret.yaml
