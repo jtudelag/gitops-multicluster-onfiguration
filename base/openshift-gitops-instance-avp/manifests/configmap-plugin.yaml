@@ -1,4 +1,5 @@
 ---
+# https://github.com/argoproj/argo-cd/discussions/12278#discussioncomment-4863196
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,10 +7,11 @@ metadata:
   namespace: argocd-avp-gitops
 data:
   avp.yaml: |
+    ---
     apiVersion: argoproj.io/v1alpha1
     kind: ConfigManagementPlugin
     metadata:
-      name: avp-simple-secrets
+      name: avp
     spec:
       allowConcurrency: true
       discover:
@@ -22,13 +24,15 @@ data:
         command:
           - argocd-vault-plugin
           - generate
+          - --verbose-sensitive-output
           - "."
       lockRepo: false
   avp-kustomize.yaml: |
+    ---
     apiVersion: argoproj.io/v1alpha1
     kind: ConfigManagementPlugin
     metadata:
-      name: avp-kustomize-secrets
+      name: avp-kustomize
     spec:
       allowConcurrency: true
       discover:
@@ -39,15 +43,30 @@ data:
             - "test -f kustomization.yaml"
       generate:
         command:
-         - sh
-        - "-c"
-        - "kustomize build --enable-helm . | argocd-vault-plugin generate -"
+          - sh
+          - "-c"
+          - "kustomize build --enable-helm . | argocd-vault-plugin generate --verbose-sensitive-output -"
       lockRepo: false
-  avp-helm.yaml: |
+  avp-k-nodisco.yaml: |
+    ---
     apiVersion: argoproj.io/v1alpha1
     kind: ConfigManagementPlugin
     metadata:
-      name: avp-helm-secrets
+      name: avp-k-nodisco
+    spec:
+      allowConcurrency: true
+      generate:
+        command:
+          - sh
+          - "-c"
+          - "kustomize build --enable-helm . | argocd-vault-plugin generate --verbose-sensitive-output -"
+      lockRepo: false
+  avp-helm.yaml: |
+    ---
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: avp-helm
     spec:
       allowConcurrency: true
       discover:
@@ -58,7 +77,7 @@ data:
             - "! test -f kustomization.yaml && test -f Chart.yaml"
       generate:
         command:
-         - sh
-        - "-c"
-        - "helm template $ARGOCD_APP_NAME --include-crds . | argocd-vault-plugin generate -"
+          - sh
+          - "-c"
+          - "helm template $ARGOCD_APP_NAME --include-crds . | argocd-vault-plugin generate --verbose-sensitive-output -"
       lockRepo: false

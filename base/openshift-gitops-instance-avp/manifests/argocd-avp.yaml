@@ -1,5 +1,5 @@
 ---
-apiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1beta1
 kind: ArgoCD
 metadata:
   finalizers:
@@ -46,6 +46,7 @@ spec:
         image: quay.io/jtudelag/argocd-avp-plugin:1.17.0
         securityContext:
           runAsNonRoot: true
+          readOnlyRootFilesystem: true
         volumeMounts:
           - mountPath: /var/run/argocd
             name: var-files
@@ -56,4 +57,64 @@ spec:
           # Register plugins into sidecar
           - mountPath: /home/argocd/cmp-server/config/plugin.yaml
             subPath: avp.yaml
+            name: cmp-plugin
+      - name: avp-kustomize
+        command: [/var/run/argocd/argocd-cmp-server]
+        envFrom:
+          - secretRef:
+              name: avp-delinea-backend-secret
+        image: quay.io/jtudelag/argocd-avp-plugin:1.17.0
+        securityContext:
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /tmp
+            name: tmp
+          # Register plugins into sidecar
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: avp-kustomize.yaml
+            name: cmp-plugin
+      - name: avp-helm
+        command: [/var/run/argocd/argocd-cmp-server]
+        envFrom:
+          - secretRef:
+              name: avp-delinea-backend-secret
+        image: quay.io/jtudelag/argocd-avp-plugin:1.17.0
+        securityContext:
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /tmp
+            name: tmp
+          # Register plugins into sidecar
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: avp-helm.yaml
+            name: cmp-plugin
+      - name: avp-k-nodisco
+        command: [/var/run/argocd/argocd-cmp-server]
+        envFrom:
+          - secretRef:
+              name: avp-delinea-backend-secret
+        image: quay.io/jtudelag/argocd-avp-plugin:1.17.0
+        securityContext:
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /tmp
+            name: tmp
+          # Register plugins into sidecar
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: avp-k-nodisco.yaml
             name: cmp-plugin
