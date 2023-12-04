@@ -19,7 +19,7 @@ data:
           command:
             - sh
             - "-c"
-            - "! test -f kustomization.yaml && ! test -f Chart.yaml"
+            - 'test ! -f Chart.yaml && test ! -f kustomization.yaml && echo Hit'
       generate:
         command:
           - argocd-vault-plugin
@@ -36,25 +36,7 @@ data:
     spec:
       allowConcurrency: true
       discover:
-        find:
-          command:
-            - sh
-            - "-c"
-            - "test -f kustomization.yaml"
-      generate:
-        command:
-          - sh
-          - "-c"
-          - "kustomize build --enable-helm . | argocd-vault-plugin generate --verbose-sensitive-output -"
-      lockRepo: false
-  avp-k-nodisco.yaml: |
-    ---
-    apiVersion: argoproj.io/v1alpha1
-    kind: ConfigManagementPlugin
-    metadata:
-      name: avp-k-nodisco
-    spec:
-      allowConcurrency: true
+        fileName: "./kustomization.yaml"
       generate:
         command:
           - sh
@@ -74,10 +56,11 @@ data:
           command:
             - sh
             - "-c"
-            - "! test -f kustomization.yaml && test -f Chart.yaml"
+            - 'test ! -f kustomization.yaml && test -f Chart.yaml && echo Hit'
       generate:
         command:
           - sh
           - "-c"
           - "helm template $ARGOCD_APP_NAME --include-crds . | argocd-vault-plugin generate --verbose-sensitive-output -"
       lockRepo: false
+...
