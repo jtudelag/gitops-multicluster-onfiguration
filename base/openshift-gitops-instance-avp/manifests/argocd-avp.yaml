@@ -29,6 +29,9 @@ spec:
           memory: 128Mi
     provider: dex
   repo:
+    env:
+      - name: ARGOCD_REPO_SERVER_PLUGIN_TAR_EXCLUSIONS
+        value: ".git/*"
     mountsatoken: true
     volumes:
       - configMap:
