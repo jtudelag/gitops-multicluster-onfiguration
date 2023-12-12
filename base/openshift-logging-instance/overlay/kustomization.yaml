@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- ../base/
+- 0-splunk-secret.yaml
+
+patches:
+# Remove tls and tls.insecureSkipVerify if the Splunk CA is already been configured in OCP.
+- patch: |-
+    - op: add
+      path: /spec/outputs
+      value:
+        - name: splunk-receiver
+          secret:
+            name: vector-splunk-secret
+          tls:
+            insecureSkipVerify: true
+          type: splunk
+          url: https://<YOUR_HOST>.splunkcloud.com:8088
+  target:
+    kind: ClusterLogForwarder
+    name: instance
+- patch: |-
+    - op: add
+      path: /spec/pipelines/1
+      value:
+        name: splunk-pipeline
+        inputRefs:
+          - audit
+        outputRefs:
+          - splunk-receiver
+  target:
+    kind: ClusterLogForwarder
+    name: instance

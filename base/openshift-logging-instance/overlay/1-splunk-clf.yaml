@@ -1,0 +1,22 @@
+# ---
+# apiVersion: logging.openshift.io/v1
+# kind: ClusterLogForwarder
+# metadata:
+#   name: instance
+#   namespace: openshift-logging
+# spec:
+#   outputs:
+#     - name: splunk-receiver
+#       secret:
+#         name: vector-splunk-secret
+#       tls:
+#         insecureSkipVerify: true
+#       type: splunk
+#       url: <http://your.splunk.hec.url:8088>
+#   pipelines:
+#     - name: splunk-pipeline
+#       inputRefs:
+#         - audit
+#       outputRefs:
+#         - splunk-receiver
+# ...
