@@ -10,7 +10,7 @@ operators:
    name: loki-operator
    source: redhat-operators
    sourceNamespace: openshift-marketplace
-   csv: loki-operator.v5.8.0
+   csv: loki-operator.v5.8.1
    namespace: openshift-operators-redhat
 
 # configuration for control of OperatorGroups
