@@ -3,7 +3,8 @@ kind: Kustomization
 resources:
 - 0-obc.yaml
 - 1-job-generate-secret.yaml
-- 2-lokistack.yaml
+- 2-job-bucket-expiration-policy.yaml
+- 3-lokistack.yaml
 - 4-cluster-logging.yaml
 - 5-clf.yaml
 - 6-job-enable-console-plugin.yaml
