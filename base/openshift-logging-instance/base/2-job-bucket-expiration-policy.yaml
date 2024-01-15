@@ -1,0 +1,109 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: manage-secrets
+  namespace: openshift-logging
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - create
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: job-create-secrets
+  namespace: openshift-logging
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: manage-secrets-sa
+  namespace: openshift-logging
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: manage-secrets
+subjects:
+- kind: ServiceAccount
+  name: job-create-secrets
+---
+# create one installplan-approver job per manual operator
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-bucket-expiration-policy
+  namespace: openshift-logging
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 10
+  activeDeadlineSeconds: 240
+  template:
+    spec:
+      containers:
+      - name: secret-creation
+        image: quay.io/jtudelag/s3cmd:latest
+        imagePullPolicy: Always
+        command:
+          - /bin/bash
+          - -c
+          - |
+            echo "Starting..."
+
+            echo "Retrieving CM data"
+            BUCKET_HOST=$(oc get -n openshift-logging configmap logging-loki-s3 -o jsonpath='{.data.BUCKET_HOST}')
+            BUCKET_NAME=$(oc get -n openshift-logging configmap logging-loki-s3 -o jsonpath='{.data.BUCKET_NAME}')
+            BUCKET_PORT=$(oc get -n openshift-logging configmap logging-loki-s3 -o jsonpath='{.data.BUCKET_PORT}')
+
+            echo "Retrieving Secret data"
+            ACCESS_KEY_ID=$(oc get -n openshift-logging secret logging-loki-s3 -o jsonpath='{.data.AWS_ACCESS_KEY_ID}' | base64 -d)
+            SECRET_ACCESS_KEY=$(oc get -n openshift-logging secret logging-loki-s3 -o jsonpath='{.data.AWS_SECRET_ACCESS_KEY}' | base64 -d)
+
+            S3CMD_CFGFILE='/tmp/s3cfg'
+
+            cat << EOF > "${S3CMD_CFGFILE}"
+            [default]
+            access_key = "${ACCESS_KEY_ID}"
+            secret_key = "${SECRET_ACCESS_KEY}"
+            host_base = "${BUCKET_HOST}:${BUCKET_PORT}"
+            host_bucket = "${BUCKET_HOST}:${BUCKET_PORT}"
+            check_ssl_certificate = False
+            check_ssl_hostname = False
+            use_http_expect = False
+            use_https = True
+            signature_v2 = True
+            signurl_use_https = True
+            EOF
+
+            echo "Listing s3 buckets"
+            s3cmd -c "${S3CMD_CFGFILE}" ls
+
+            echo "Checking s3 bucket lifecycle policy"
+            s3cmd -c "${S3CMD_CFGFILE}" getlifecycle "s3://${BUCKET_NAME}"
+
+            echo "Setting s3 bucket expiration policy"
+            s3cmd -c "${S3CMD_CFGFILE}" expire "s3://${BUCKET_NAME}" --expiry-days 30
+
+            echo "Checking s3 bucket lifecycle policy"
+            s3cmd -c "${S3CMD_CFGFILE}" getlifecycle "s3://${BUCKET_NAME}"
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      serviceAccount: job-create-secrets
+      serviceAccountName: job-create-secrets
+      terminationGracePeriodSeconds: 30
+...
