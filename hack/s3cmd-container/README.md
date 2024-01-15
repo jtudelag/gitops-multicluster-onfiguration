@@ -8,7 +8,7 @@ because the s3cmd package has `python3-magic` as a dependency.
 To build the container image, run the following command:
 
 ```bash
-podman build -f Containerfile -t localhost/s3cmd:latest
+podman build -f Containerfile.fedora -t localhost/s3cmd:latest
 ```
 
 # Apply expiration policy to a bucket

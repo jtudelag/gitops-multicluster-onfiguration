@@ -1,0 +1,8 @@
+FROM docker.io/fedora:39
+
+# Install s3cmd
+RUN dnf install -y s3cmd curl
+
+RUN curl https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/stable-4.12/openshift-client-linux-4.12.46.tar.gz -o openshift-client-linux.tar.gz && \
+    tar xvfz openshift-client-linux.tar.gz --directory "/usr/local/bin/" oc && \
+    rm -rf openshift-client-linux.tar.gz
