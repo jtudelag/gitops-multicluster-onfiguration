@@ -1,0 +1,9 @@
+#https://access.redhat.com/solutions/7000863
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: user-ca-bundle
+  namespace: argocd-avp-gitops
+  labels:
+    config.openshift.io/inject-trusted-cabundle: 'true'
