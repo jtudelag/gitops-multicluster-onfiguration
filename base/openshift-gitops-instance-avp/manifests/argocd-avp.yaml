@@ -37,6 +37,10 @@ spec:
       - configMap:
           name: cmp-plugin
         name: cmp-plugin
+      - configMap:
+          name: user-ca-bundle
+        name: user-ca-bundle
+        optional: true
     # This is our sidecar container spec for the vault plugin
     # Specifically note the mounting of our vault config env vars
     # via secretRef.
@@ -51,6 +55,10 @@ spec:
           runAsNonRoot: true
           readOnlyRootFilesystem: true
         volumeMounts:
+          # https://access.redhat.com/solutions/7000863
+          - mountPath: /etc/pki/tls/certs/ca-bundle.crt
+            subPath: ca-bundle.crt
+            name: user-ca-bundle
           - mountPath: /var/run/argocd
             name: var-files
           - mountPath: /home/argocd/cmp-server/plugins
@@ -71,6 +79,10 @@ spec:
           runAsNonRoot: true
           readOnlyRootFilesystem: true
         volumeMounts:
+          # https://access.redhat.com/solutions/7000863
+          - mountPath: /etc/pki/tls/certs/ca-bundle.crt
+            subPath: ca-bundle.crt
+            name: user-ca-bundle
           - mountPath: /var/run/argocd
             name: var-files
           - mountPath: /home/argocd/cmp-server/plugins
@@ -91,6 +103,10 @@ spec:
           runAsNonRoot: true
           readOnlyRootFilesystem: true
         volumeMounts:
+          # https://access.redhat.com/solutions/7000863
+          - mountPath: /etc/pki/tls/certs/ca-bundle.crt
+            subPath: ca-bundle.crt
+            name: user-ca-bundle
           - mountPath: /var/run/argocd
             name: var-files
           - mountPath: /home/argocd/cmp-server/plugins

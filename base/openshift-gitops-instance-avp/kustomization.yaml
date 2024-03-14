@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: argocd-avp-gitops
 resources:
 - manifests/ns.yaml
+- manifests/configmap-user-ca-bundle.yaml
 - manifests/avp-delinea-backend-secret.yaml
 - manifests/configmap-plugin.yaml
 - manifests/argocd-avp.yaml
