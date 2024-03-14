@@ -36,4 +36,3 @@ status:
   conditions:
     - status: "True"
       type: Available
-
