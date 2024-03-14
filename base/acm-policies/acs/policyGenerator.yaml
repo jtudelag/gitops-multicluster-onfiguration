@@ -39,6 +39,17 @@ policies:
   manifests:
     - path: input-sensor/policy-acs-central-ca-bundle.yaml
     - path: input-sensor/policy-acs-central-ca-bundle-job.yaml
+# Sync init-bundle secrets into policies NS in Hub
+- name: policy-acs-sync-resources
+  categories:
+    - SI System and Information Integrity
+  consolidateManifests: false
+  controls:
+    - SI-5 Security Alerts Advisories and Directives
+  dependencies:
+    - name: policy-acs-central-ca-bundle
+  manifests:
+    - path: input-sensor/policy-acs-sync-resources.yaml
 # Check init bundle secret expiration
 # They will be autorenewed in future versions of OCP
 - name: policy-acs-monitor-certs
