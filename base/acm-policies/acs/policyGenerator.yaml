@@ -96,6 +96,7 @@ policies:
     - path: input-sensor/policy-advanced-managed-cluster-security.yaml
   policySets:
     - openshift-plus-clusters
+    # - openshift-plus-hub # Uncomment to install secure cluster in the Hub cluster
 # Check secured clusters
 - name: policy-advanced-managed-cluster-status
   categories:
